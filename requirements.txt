@@ -1,0 +1,45 @@
+Desarrollo en Django
+
+En el siguiente enlace encontrará un archivo plano separado por comas (CSV), el cual tiene 5 columnas y 10 registros.
+
+Debe crear una aplicación en Django que permita subir el archivo y validar su estructura de la siguiente manera:
+
+📌 Validaciones requeridas
+
+El archivo solo debe permitir 5 columnas
+
+Si existen más o menos columnas, se debe alertar al usuario.
+
+Columna 1:
+
+Solo debe permitir números enteros
+
+Longitud entre 3 y 10 caracteres
+
+Columna 2:
+
+Solo debe permitir correos electrónicos
+
+Columna 3:
+
+Solo debe permitir los valores “CC” o “TI”
+
+Columna 4:
+
+Solo debe permitir valores entre 500000 y 1500000
+
+Columna 5:
+
+Permite cualquier valor
+
+📊 Resultados esperados
+
+El programa deberá mostrar los resultados de validación en la página, después de que se cargue el archivo:
+
+En caso de error:
+
+Mostrar la fila y la columna donde ocurrió el error
+
+En caso de éxito:
+
+Mostrar un mensaje indicando “archivo validado”

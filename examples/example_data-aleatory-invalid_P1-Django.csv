@@ -1,0 +1,10 @@
+12345,correo@valido.com,CC,750000,OK
+12,correo2@valido.com,TI,900000,Error columna 1
+9876543210,correoinvalido.com,CC,600000,Email mal
+456789,correo3@valido.com,CE,800000,Tipo documento inválido
+321654,correo4@valido.com,TI,2000000,Valor fuera de rango
+abc123,correo5@valido.com,CC,550000,No es número
+741852,correo6@valido.com,CC,500000,OK
+963852,correo7@valido.com,TI,499999,Mínimo no cumple
+159753,correo8@valido.com,CC,1500000,OK
+852456,correo9@valido.com,TI,1000000,OK
