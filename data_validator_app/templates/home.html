@@ -1,15 +1,93 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title></title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="" />
+    <link rel="stylesheet" href="{% static 'css/home_styles.css' %}" />
+    <script src="{% static 'js/home_script.js' %}" defer></script>
     <title>Data Validator</title>
   </head>
   <body>
-    <h1>Welcome to Data Validator App</h1>
+    <div class="container main-container">
+      <header class="site-header header" role="banner"></header>
+
+      <main class="content" role="main">
+        <!-- Formulario para subir CSV. enctype necesario para archivos. -->
+        <form
+          id="uploadForm"
+          class="upload-form"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+
+          <h1 class="form-title">Subir archivo CSV</h1>
+
+          <p class="form-instructions">
+            Por favor sube tu archivo <strong>CSV</strong> para validación:
+          </p>
+
+          <!-- Wrapper: botón visible y campo de archivo oculto visualmente -->
+          <div class="file-wrapper">
+            <label for="csvFile" class="file-label"
+              >Seleccionar archivo CSV</label
+            >
+            <!-- El input permanece accesible, pero lo ocultamos visualmente con CSS -->
+            <input
+              id="csvFile"
+              class="file-input"
+              type="file"
+              name="csv_file"
+              accept=".csv,text/csv"
+              required
+              aria-describedby="fileStatus"
+            />
+          </div>
+
+          <!-- Área para mostrar el estado/nombre del archivo seleccionado (anuncia cambios a lectores de pantalla) -->
+          <div id="fileStatus" class="file-status" aria-live="polite">
+            No se ha seleccionado archivo
+          </div>
+
+          <button
+            id="validateBtn"
+            class="validate-button"
+            type="submit"
+            disabled
+          >
+            Validar Datos
+          </button>
+        </form>
+      </main>
+
+      <!-- Footer: información/licencia/links -->
+      <footer class="site-footer footer" role="contentinfo">
+        {% if rows%}
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Col</th>
+              <th>Email</th>
+              <th>Tipo</th>
+              <th>Valor</th>
+              <th>Observación</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+            <tr>
+              {% for col in row %}
+              <td>{{ col }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </footer>
+    </div>
   </body>
 </html>
