@@ -20,6 +20,7 @@
           id="uploadForm"
           class="upload-form"
           method="post"
+          action="{% url 'upload_csv' %}"
           enctype="multipart/form-data"
         >
           {% csrf_token %}
@@ -89,5 +90,14 @@
         {% endif %}
       </footer>
     </div>
+    {% if success %}
+    <p>Archivo validado correctamente</p>
+    {% endif %} {% if errors %}
+    <ul>
+      {% for e in errors %}
+      <li>Fila {{ e.row }}, Columna {{ e.column }}: {{ e.message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
   </body>
 </html>
