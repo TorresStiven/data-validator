@@ -12,8 +12,6 @@
   </head>
   <body>
     <div class="container main-container">
-      <header class="site-header header" role="banner"></header>
-
       <main class="content" role="main">
         <!-- Formulario para subir CSV. enctype necesario para archivos. -->
         <form
@@ -25,18 +23,26 @@
         >
           {% csrf_token %}
 
-          <h1 class="form-title">Subir archivo CSV</h1>
+          <h1 class="form-title">Sube tu archivo CSV</h1>
 
           <p class="form-instructions">
-            Por favor sube tu archivo <strong>CSV</strong> para validación:
+            Aquí puedes cargar tu archivo <strong>CSV</strong> para revisar su
+            contenido y validar que los datos estén correctos antes de
+            continuar.
           </p>
 
-          <!-- Wrapper: botón visible y campo de archivo oculto visualmente -->
           <div class="file-wrapper">
-            <label for="csvFile" class="file-label"
-              >Seleccionar archivo CSV</label
-            >
-            <!-- El input permanece accesible, pero lo ocultamos visualmente con CSS -->
+            {% if not rows %}
+            <img
+              src="{% static 'src/images/csv-file-type-svgrepo-com.svg' %}"
+              alt="Icono de archivo CSV"
+              class="file-icon"
+            />
+            {% endif %}
+            <label for="csvFile" class="file-label">
+              {% if rows %} ¿Quieres subir un archivo nuevo? {% else %} Click
+              aquí para subir tu archivo {% endif %}
+            </label>
             <input
               id="csvFile"
               class="file-input"
@@ -48,10 +54,7 @@
             />
           </div>
 
-          <!-- Área para mostrar el estado/nombre del archivo seleccionado (anuncia cambios a lectores de pantalla) -->
-          <div id="fileStatus" class="file-status" aria-live="polite">
-            No se ha seleccionado archivo
-          </div>
+          <div id="fileStatus" class="file-status" aria-live="polite"></div>
 
           <button
             id="validateBtn"
@@ -67,37 +70,57 @@
       <!-- Footer: información/licencia/links -->
       <footer class="site-footer footer" role="contentinfo">
         {% if rows%}
-        <table border="1">
-          <thead>
-            <tr>
-              <th>Col</th>
-              <th>Email</th>
-              <th>Tipo</th>
-              <th>Valor</th>
-              <th>Observación</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in rows %}
-            <tr>
-              {% for col in row %}
-              <td>{{ col }}</td>
+        <div class="table-wrapper">
+          <table class="data-table" role="table" aria-describedby="tableDesc">
+            <caption id="tableDesc" class="table-caption">
+              {% if filename %}Resultados de validación de: {{ filename }} {%
+              else %}Resultados de validación{% endif %}
+            </caption>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Correo electronico</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Observación</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in rows %}
+              <tr>
+                {% for cell in row %}
+                <td class="{% if cell.error %}cell-error{% endif %}">
+                  {{ cell.value }}
+                </td>
+                {% endfor %}
+              </tr>
               {% endfor %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+
+          {% if errors %}
+          <div class="error-list" role="status" aria-live="polite">
+            <h3 class="error-title">Errores encontrados</h3>
+            <ul>
+              {% for e in errors %}
+              <li class="error-item">
+                {% if e.column == 'ALL' %}
+                <span class="error-loc"
+                  >Fila {{ e.row }}, todas las columnas</span
+                >: <span class="error-msg">{{ e.message }}</span>
+                {% else %}
+                <span class="error-loc"
+                  >Fila {{ e.row }}, Columna {{ e.column }}</span
+                >: <span class="error-msg">{{ e.message }}</span>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        </div>
         {% endif %}
       </footer>
     </div>
-    {% if success %}
-    <p>Archivo validado correctamente</p>
-    {% endif %} {% if errors %}
-    <ul>
-      {% for e in errors %}
-      <li>Fila {{ e.row }}, Columna {{ e.column }}: {{ e.message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
   </body>
 </html>

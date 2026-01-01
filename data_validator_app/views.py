@@ -59,14 +59,53 @@ def upload_csv(request):
         # Si no es POST (p. ej. GET), creamos un formulario vacío para mostrarlo en la plantilla
         form = CSVUploadForm()
 
+    # Preparar información adicional para la plantilla
+    # - filename: nombre del archivo subido (si existe)
+    # - rows: convertimos a una estructura que incluye meta por celda (error True/False)
+
+    # Construir mapa de errores por celda: row_number -> set(columns) o 'ALL'
+    error_coords = {}
+    for err in errors:
+        r = err.get('row')
+        c = err.get('column')
+        if r not in error_coords:
+            error_coords[r] = set()
+        if c == 'ALL':
+            error_coords[r] = 'ALL'
+        else:
+            if error_coords[r] != 'ALL':
+                try:
+                    error_coords[r].add(int(c))
+                except Exception:
+                    pass
+
+    # Reconstruir filas con meta por celda
+    rows_meta = []
+    for idx, row in enumerate(rows, start=1):
+        cells = []
+        coords = error_coords.get(idx)
+        for j, val in enumerate(row, start=1):
+            has_error = False
+            if coords == 'ALL' or (isinstance(coords, set) and j in coords):
+                has_error = True
+            cells.append({'value': val, 'error': has_error})
+        rows_meta.append(cells)
+
+    # Extraer el nombre del archivo si fue enviado
+    filename = None
+    if request.method == 'POST' and 'csv_file' in request.FILES:
+        filename = request.FILES['csv_file'].name
+
     # Finalmente renderizamos 'home.html' pasando:
     # - form: el formulario (vacío o con errores)
-    # - rows: las filas leídas
+    # - rows: filas con meta por celda
     # - errors: lista de errores encontrados
     # - success: booleano que indica si todo fue correcto
+    # - filename: nombre original del archivo subido
     return render(request, "home.html", {
         "form": form,
-        "rows": rows,
+        "rows": rows_meta,
         "errors": errors,
-        "success": success
+        "success": success,
+        "filename": filename
     })

@@ -1,20 +1,59 @@
-/* Styles for file upload UI and form */
+body{
+  background-color: #e8e8e8;
+  color: #000;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+h1{
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.main-container { 
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  box-sizing: border-box;
+  box-shadow: 0 10px 10px 0 rgba(0,0,0,.1);
+  border-radius: 10px;
+  padding: 40px;
+} 
+.form-instruction {
+  font-size: 1rem;
+  text-align: center;
+}
 
-/* Layout */
-.main-container { padding: 2rem; }
-.content { max-width: 700px; margin: 0 auto; }
-
-/* File wrapper and custom button */
-.file-wrapper { position: relative; display: inline-block; }
+.file-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2px dashed #3182ce;
+  border-radius: 10px;
+  padding: 1rem;
+}
+.file-icon {
+  display: block;
+  width: 60px;
+  height: auto;
+  margin: 0 auto 0.5rem auto;
+}
 .file-label {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  background: #2b6cb0;
-  color: #fff;
-  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  background: transparent;
+  color: #2869a7;
   cursor: pointer;
-  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
 }
+.file-label.selected { font-weight: 700; }
 
 /* Hide built-in file button (where supported) */
 input[type="file"]::file-selector-button { display: none; }
@@ -32,21 +71,55 @@ input[type="file"]::-webkit-file-upload-button { visibility: hidden; }
 }
 
 /* File status */
-.file-status { display: inline-block; margin-left: 1rem; color: #4a5568; vertical-align: middle; }
-.file-status.valid { color: #38a169; }
-.file-status.invalid { color: #e53e3e; }
+.file-status { display: inline-block; margin-left: 1rem; color: inherit; vertical-align: middle; min-height: 1.2em; }
+.file-status.valid { font-weight: 700; color: inherit; }
+.file-status.invalid { color: #e53e3e; font-weight: 700; }
 
 /* Button styles */
 .validate-button {
   margin-top: 1rem;
-  padding: 0.6rem 1rem;
-  background: #3182ce;
+  padding: 0.8rem 1rem;
+  background: #2869a7;
   color: #fff;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
 }
-.validate-button[disabled] { opacity: 0.6; cursor: not-allowed; }
+.validate-button[disabled] { background: #ccc; color: #666; cursor: not-allowed; }
 
 /* Focus (accesibilidad) */
 .file-label:focus, .file-input:focus { outline: 3px solid rgba(66,153,225,0.4); outline-offset: 2px; }
+
+/* Data table styles */
+.table-wrapper { margin-top: 1rem; overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border-radius: 8px; overflow: hidden; }
+.data-table thead { background-color: #2869a7; color: #fff; }
+.data-table th, .data-table td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.data-table tbody tr:nth-child(even) { background: #f7f9fb; }
+.data-table tbody tr:hover { background: rgba(40,105,167,0.04); }
+.data-table th { font-weight: 700; font-size: 0.95rem; }
+.table-caption { font-size: 0.9rem; color: #666; text-align: left; padding: 0.6rem 0.75rem; }
+
+@media (min-width: 768px) {
+  .data-table th, .data-table td { padding: 0.75rem 1rem; }
+}
+
+/* Error highlighting */
+.cell-error { text-decoration: underline; text-decoration-color: #2869a7; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+/* Errors list styles */
+.error-list {
+  margin-top: 0.75rem;
+  background: #fff;
+  border-left: 4px solid #2869a7;
+  padding: 0.8rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+.error-title { margin: 0 0 0.5rem 0; font-size: 0.95rem; color: #2869a7; font-weight: 700; }
+.error-list ul { margin: 0; padding-left: 1rem; }
+.error-item { margin: 0.25rem 0; font-size: 0.95rem; color: #222; }
+.error-loc { font-weight: 700; color: #2869a7; }
+.error-msg { font-weight: 400; margin-left: 0.25rem; color: #333; }

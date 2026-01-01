@@ -11,17 +11,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const status = document.getElementById('fileStatus');
   const btn = document.getElementById('validateBtn');
   const form = document.getElementById('uploadForm');
+  const label = document.querySelector('.file-label');
+  const initialLabel = label ? label.textContent : 'Click aquí para subir tu archivo';
 
+  // empezar sin texto visible en el estado
+  status.textContent = '';
 
   const setInvalid = (msg) => {
-    status.textContent = msg;
+    status.textContent = msg || '';
     status.classList.remove('valid');
     status.classList.add('invalid');
     btn.disabled = true;
+    if (label) {
+      label.textContent = initialLabel;
+      label.classList.remove('selected');
+    }
   };
 
   const setValid = (name) => {
-    status.textContent = `Seleccionado: ${name}`;
+    if (label) {
+      // reemplaza el texto del label directamente por el nombre del archivo
+      label.textContent = name;
+      label.classList.add('selected');
+    }
+    // mantenemos status vacío visualmente (pero accesible para lectores si se desea)
+    status.textContent = '';
     status.classList.remove('invalid');
     status.classList.add('valid');
     btn.disabled = false;
@@ -32,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const file = input.files[0];
 
     if (!file) {
-      setInvalid('No se ha seleccionado archivo');
+      setInvalid();
       return;
     }
 

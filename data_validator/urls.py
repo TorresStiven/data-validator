@@ -20,4 +20,5 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('data_validator_app/', include('data_validator_app.urls')),
+    path('', include('data_validator_app.urls')),
 ]
